@@ -25,8 +25,13 @@ function Post-MessagesToTeams {
     } elseif ($EVENT_TYPE -eq "schedule") {
         Write-Host "This workflow was triggered by a schedule."
         $eventType = "Scheduled Run"
-        # Add your scheduled run-specific logic here
-    } else {
+        # Add your scheduled run-specific logic here repository_dispatch
+    } elseif ($EVENT_TYPE -eq "repository_dispatch") {
+        Write-Host "This workflow was triggered by a schedule."
+        $eventType = "Triggered from API"
+        # Add your scheduled run-specific logic here repository_dispatch
+    }
+    else {
         Write-Host "Unknown event: $EVENT_TYPE"
         $eventType = "Unknown"
         # Handle other event types as needed
