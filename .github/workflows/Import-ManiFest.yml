@@ -109,12 +109,15 @@ jobs:
           $GIT_BRANCH="${{ github.ref }}"
           $JOB_STATUS="${{ job.status }}"
           $EVENT_TYPE="${{ github.event_name }}"
-          if( $EVENT_TYPE -eq "schedule" ) {
-                  $TRIGGER_BY_NAME="Scheduler"
-          }
-          else {
-                  $TRIGGER_BY_NAME="${{ github.actor }}"
-          }
+          # if( $EVENT_TYPE -eq "schedule" ) {
+          #         $TRIGGER_BY_NAME="Scheduler"
+          # }
+          # elseif ( $EVENT_TYPE -eq "repository_dispatch" ) {
+          #   $TRIGGER_BY_NAME="Triggered from API"
+          # }
+          # else {
+          #         $TRIGGER_BY_NAME="${{ github.actor }}"
+          # }
           $ARTIFACT_LINK="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           
           # Call the function from utilities.ps1 script
