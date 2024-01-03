@@ -1,0 +1,127 @@
+name: Export-ManiFest CICD
+on:
+  repository_dispatch:
+    types: [Export]
+    inputs:
+      manifest_Id:
+        type: string
+        required: true
+        description: Recipe manifest Id to Export
+        default: "101814"
+        options:
+          - "101814"
+env:
+  DEPLOYMENT_NAME: Export-ManiFest CICD
+  manifest_id: ${{ github.event.inputs.manifest_Id }}
+  Workato_Token: ${{ secrets.WORKATOTOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+  TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+
+jobs:
+  Workato-CICD:
+    name: Export-ManiFest CICD
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Set TIMESTAMP
+        id: set_timestamp
+        run: |
+          echo "TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S %Z")" >> $GITHUB_ENV
+
+      - name: Set Summary File Name
+        id: set_summary_file
+        run: |
+          TIMESTAMP=$TIMESTAMP
+          echo "summary_file_name=summary_$(date -u -d "$TIMESTAMP" +"%Y-%m-%d_%H_%M_%S").txt" >> $GITHUB_ENV
+
+      - name: Full Code Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: "${{ secrets.GITHUBTOKEN }}"
+
+      - name: Export CICD
+        shell: pwsh
+        run: |
+          ./scripts/export.ps1 -accessToken "${{ secrets.WORKATOTOKEN }}" -manifestId ${{env.manifest_id}} -summary_file_name $env:summary_file_name
+
+      - name: Append additional Log lines to Summary File
+        run: |
+          SUMMARY_FILE="${{ env.summary_file_name }}"
+
+          # Append log lines to the summary file
+          echo "Workflow Executed at: ${{ env.TIMESTAMP }}" >> "$SUMMARY_FILE"
+          echo "Job Status: ${{ job.status }}" >> "$SUMMARY_FILE"
+          echo "Triggered by: ${{ github.actor }}" >> "$SUMMARY_FILE"
+
+      - name: Upload Summary Log File in to Git
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.summary_file_name }}
+          path: ${{ env.summary_file_name }}
+
+      - name: Remove Summary Log File from Git Repository
+        run: rm ${{ env.summary_file_name }}
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.email "rajeshjanapati@gmail.com"
+          git config --global user.name "rajeshjanapati"
+          git add .
+          git commit -m "Commit message"
+          git push origin HEAD:main
+
+      - name: Send Notification to Teams
+        if: ${{ always() }}
+        shell: pwsh
+        run: |   
+          
+          $TIMESTAMP="${{ env.TIMESTAMP }}"
+          $TEAMS_WEBHOOK_URL="${{ secrets.TEAMS_WEBHOOK_URL }}"
+          $WORKFLOW_NAME="${{ github.workflow }}"
+          $RUN_ID="${{ github.run_id }}"
+          $RUN_NUMBER="${{ github.run_number }}"
+          $GIT_BRANCH="${{ github.ref }}"
+          $JOB_STATUS="${{ job.status }}"
+          $EVENT_TYPE="${{ github.event_name }}"
+          if( $EVENT_TYPE -eq "schedule" ) {
+                  $TRIGGER_BY_NAME="Scheduler"
+          }
+          else {
+                  $TRIGGER_BY_NAME="${{ github.actor }}"
+          }
+          $ARTIFACT_LINK="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          
+          # Call the function from utilities.ps1 script
+          . ./scripts/utilities.ps1
+          Post-MessagesToTeams -title "$TITLE" -summary "$SUMMARY" -workflowName "$WORKFLOW_NAME" -runId "$RUN_ID" -runNumber "$RUN_NUMBER" -executionTimestamp "$TIMESTAMP" -triggeredByName "$TRIGGER_BY_NAME" -EventType "$EVENT_TYPE" -gitBranch "$GIT_BRANCH" -jobStatus "$JOB_STATUS" -messageColor "$MESSAGE_COLOR" -themeColor "$THEME_COLOR" -artifactLink "$ARTIFACT_LINK" 
+      
+
+      # - name: Add local files to Git local branch
+      #   run: |
+      #     git config --global user.email "rajeshjanapati@gmail.com"
+      #     git config --global user.name "rajeshjanapati"
+      #     git add .
+
+      # - name: Check for delta changes - Git
+      #   id: check_git_changes
+      #   run: |
+      #     if [[ -n "$(git status --porcelain)" ]]; then
+      #       echo "Local branch is not up to date with remote_branch. Committing and pushing latest code to Git"
+      #       git commit -a -m "cicd update"
+
+      #       # Attempt to pull and auto-merge
+      #       if git pull --no-edit --no-rebase origin cicd; then
+      #         echo "Merge successful. Pushing changes."
+      #         git push origin HEAD:main
+      #       else
+      #         echo "Merge conflicts occurred. Please resolve conflicts and commit the changes."
+      #       fi
+      #     else
+      #       echo "Local branch is up to date with Remote branch. No changes to push."
+      #       exit 0
+      #     fi
