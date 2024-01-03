@@ -12,7 +12,7 @@ on:
           - "101814"
 env:
   DEPLOYMENT_NAME: Export-ManiFest CICD
-  manifest_id: ${{ github.event.inputs.manifest_Id }}
+  manifest_id: ${{ github.event.client_payload.manifest_Id }}
   Workato_Token: ${{ secrets.WORKATOTOKEN }}
   GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
   TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
