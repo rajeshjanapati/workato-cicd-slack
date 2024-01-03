@@ -27,6 +27,7 @@ env:
   folder_Id: ${{ github.event.client_payload.folder_Id }}
   manifest_name: "${{github.event.client_payload.manifest_Name == '' &&  'null' || github.event.client_payload.manifest_Name}}"
   Workato_Token: ${{ secrets.PRODACCESSTOKEN }}
+  TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
 
 jobs:
   Workato-CICD:
