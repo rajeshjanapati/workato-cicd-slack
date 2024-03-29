@@ -46,7 +46,8 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
-
+      summary_file: 'write'  # Adjust this based on your needs
+      
     steps:
       - id: "input-validation"
         name: Validate Input
