@@ -107,8 +107,15 @@ jobs:
           name: summary
           path: ${{ env.summary_file_name }}
 
+      - name: Debug Output
+        run: |
+          ls -l /           # Check directory permissions
+          echo "Summary file path: ${{ env.GITHUB_WORKSPACE }}/${{ env.summary_file_name }}"
+
+
       - name: Remove Summary Log File from Git Repository
         run: rm ${{ env.summary_file_name }}
+        continue-on-error: true  # Continue even if file doesn't exist
 
       - name: Commit and Push Changes
         run: |
