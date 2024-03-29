@@ -229,16 +229,21 @@ $allSummaries_Log += $allSummaries_Log_Import + "`r`n"
 # Set the absolute path for the summary file in the workspace directory
 $summaryFilePath = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $summary_file_name
 
-# Set permissions for creating the summary file
 try {
-    $null = New-Item -Path $summaryFilePath -ItemType File -Force
-} catch {
-    Write-Host "Error creating summary file: $_"
+    # Attempt to create the summary file if it doesn't exist
+    if (!(Test-Path -Path $summaryFilePath)) {
+        New-Item -Path $summaryFilePath -ItemType File -Force
+    }
+
+    # Write the combined summaries to the summary file
+    $allSummaries_Log | Out-File -FilePath $summaryFilePath -Append -Encoding UTF8
+
+    Write-Host "Summary file written successfully: $summaryFilePath"
+}
+catch {
+    Write-Host "Error writing to summary file: $_"
     exit 1
 }
-
-# Write the combined summaries to the summary file
-$allSummaries_Log | Out-File -FilePath $summaryFilePath -Append -Encoding UTF8
 
 
 
