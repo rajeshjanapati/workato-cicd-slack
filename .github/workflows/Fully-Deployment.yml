@@ -91,6 +91,8 @@ jobs:
 
       - name: Append Summary to File
         run: |
+          pwd
+          ls -l /
           SUMMARY_FILE="${{ env.GITHUB_WORKSPACE }}/${{ env.summary_file_name }}"
           echo "Summary file path: $SUMMARY_FILE"
 
