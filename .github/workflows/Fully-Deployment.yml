@@ -92,6 +92,7 @@ jobs:
       - name: Append Summary to File
         run: |
           SUMMARY_FILE="${{ env.GITHUB_WORKSPACE }}/${{ env.summary_file_name }}"
+          echo "Summary file path: $SUMMARY_FILE"
 
           # Append log lines to the summary file
           echo "Workflow Executed at: ${{ env.TIMESTAMP }}" >> "$SUMMARY_FILE"
