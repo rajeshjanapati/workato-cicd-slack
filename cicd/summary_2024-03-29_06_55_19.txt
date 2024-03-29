@@ -1,0 +1,9 @@
+Export Summary:
+manifest Recipe Exported Successfully to GitHub: Count - 1, Manifest Names - python-connector_rajesh-kumar-janapati
+manifest Recipe Export Failed: Count - 0, Manifest Names - 
+
+Import Summary:
+manifest Recipes Imported Successfully to Workato: Count - 2, Manifest Names - python-connector_rajesh-kumar-janapati, task_rajesh-kumar-janapati
+manifest Recipes Import Failed: Count - 2, Manifest Names - python-connector_rajesh-kumar-janapati, task_rajesh-kumar-janapati
+
+
