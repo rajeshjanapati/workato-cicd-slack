@@ -86,11 +86,12 @@ jobs:
       - name: Fully-Deployment CICD
         shell: pwsh
         run: |
-          ./scripts/fullyDeployment.ps1 -accessToken "${{ secrets.WORKATOTOKEN }}" -prodToken "${{ secrets.PRODACCESSTOKEN }}" -manifestName ${{env.manifest_name}} -folderId ${{env.folder_Id}} -action ${{env.ACTION_TYPE}} -manifestId ${{env.manifest_id}} -summary_file_name $env:summary_file_name
+          $output = ./scripts/fullyDeployment.ps1 -accessToken "${{ secrets.WORKATOTOKEN }}" -prodToken "${{ secrets.PRODACCESSTOKEN }}" -manifestName ${{env.manifest_name}} -folderId ${{env.folder_Id}} -action ${{env.ACTION_TYPE}} -manifestId ${{env.manifest_id}} -summary_file_name $env:summary_file_name
+          Write-Output $output
 
-      - name: Append additional Log lines to Summary File
+      - name: Append Summary to File
         run: |
-          SUMMARY_FILE="${{ env.summary_file_name }}"
+          echo "${{ steps.cdc.outputs.stdout }}" >> ${{ env.summary_file_name }}
 
           # Append log lines to the summary file
           echo "Workflow Executed at: ${{ env.TIMESTAMP }}" >> "$SUMMARY_FILE"
