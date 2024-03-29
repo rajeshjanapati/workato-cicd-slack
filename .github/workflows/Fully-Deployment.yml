@@ -101,7 +101,7 @@ jobs:
       - name: Upload Summary Log File in to Git
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.summary_file_name }}
+          name: summary
           path: ${{ env.summary_file_name }}
 
       - name: Remove Summary Log File from Git Repository
