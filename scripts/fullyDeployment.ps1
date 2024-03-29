@@ -228,10 +228,11 @@ $allSummaries_Log += $allSummaries_Log_Import + "`r`n"
 
 # Set the absolute path for the summary file
 $scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$summaryFilePath = Join-Path $scriptDirectory $summary_file_name
 
-# Write the combined summaries to the summary file
+# Write the combined summaries to the summary file in the repository root
+$summaryFilePath = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $summary_file_name
 $allSummaries_Log | Out-File -FilePath $summaryFilePath -Append -Encoding UTF8
+
 
 # Delete the summary file from the artifacts
 # Remove-Item $summaryFilePath -Force
