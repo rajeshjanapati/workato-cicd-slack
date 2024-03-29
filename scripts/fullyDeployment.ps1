@@ -1,9 +1,7 @@
-#Export
-
-# Input parameters
+# Input parameters for export
 Param (
     [Parameter(mandatory = $true)][string]$accessToken, # To receive Workato token
-    [Parameter(mandatory = $true)][string]$manifestId, # To receive manifest_ID    
+    [Parameter(mandatory = $true)][string]$manifestId, # To receive manifest ID    
     [Parameter(mandatory = $true)][string]$summary_file_name,
     [Parameter(mandatory = $true)][string]$prodToken, # To receive Workato token
     [Parameter(mandatory = $true)][string]$manifestName, # To receive manifest name
@@ -119,14 +117,6 @@ cd ..
 $currentdir = Get-Location
 Write-Host "currentdir:$currentdir"
 
-# Combine the current directory path with the file name
-#$filePath = Join-Path $currentdir $summary_file_name
-
-# Write the combined summaries to the summary file
-#$allSummaries_Log | Out-File -FilePath $filePath -Append -Encoding UTF8
-
-
-
 $headers = @{ 'Authorization' = "Bearer $prodToken" }
 
 $manifestDirectory = "cicd"
@@ -236,9 +226,12 @@ $allSummaries_Log += $allSummaries_Log_Export + "`r`n"
 $allSummaries_Log += "Import Summary:`r`n"
 $allSummaries_Log += $allSummaries_Log_Import + "`r`n"
 
-# Combine the current directory path with the file name
-$filePath = Join-Path -Path $PWD -ChildPath $summary_file_name
+# Set the absolute path for the summary file
+$scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Definition
+$summaryFilePath = Join-Path $scriptDirectory $summary_file_name
 
 # Write the combined summaries to the summary file
-$allSummaries_Log | Out-File -FilePath $filePath -Append -Encoding UTF8
+$allSummaries_Log | Out-File -FilePath $summaryFilePath -Append -Encoding UTF8
 
+# Delete the summary file from the artifacts
+# Remove-Item $summaryFilePath -Force
