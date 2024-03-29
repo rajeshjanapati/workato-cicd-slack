@@ -226,12 +226,20 @@ $allSummaries_Log += $allSummaries_Log_Export + "`r`n"
 $allSummaries_Log += "Import Summary:`r`n"
 $allSummaries_Log += $allSummaries_Log_Import + "`r`n"
 
-# Set the absolute path for the summary file
-$scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Definition
-
-# Write the combined summaries to the summary file in the workspace directory
+# Set the absolute path for the summary file in the workspace directory
 $summaryFilePath = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $summary_file_name
+
+# Set permissions for creating the summary file
+try {
+    $null = New-Item -Path $summaryFilePath -ItemType File -Force
+} catch {
+    Write-Host "Error creating summary file: $_"
+    exit 1
+}
+
+# Write the combined summaries to the summary file
 $allSummaries_Log | Out-File -FilePath $summaryFilePath -Append -Encoding UTF8
+
 
 
 # Delete the summary file from the artifacts
