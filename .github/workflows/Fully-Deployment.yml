@@ -86,7 +86,7 @@ jobs:
       - name: Fully-Deployment CICD
         shell: pwsh
         run: |
-          ./scripts/FullyDeployment.ps1 -accessToken "${{ secrets.WORKATOTOKEN }}" -prodToken "${{ secrets.PRODACCESSTOKEN }}" -manifestName ${{env.manifest_name}} -folderId ${{env.folder_Id}} -action ${{env.ACTION_TYPE}} -manifestId ${{env.manifest_id}} -summary_file_name $env:summary_file_name
+          ./scripts/fullyDeployment.ps1 -accessToken "${{ secrets.WORKATOTOKEN }}" -prodToken "${{ secrets.PRODACCESSTOKEN }}" -manifestName ${{env.manifest_name}} -folderId ${{env.folder_Id}} -action ${{env.ACTION_TYPE}} -manifestId ${{env.manifest_id}} -summary_file_name $env:summary_file_name
 
       - name: Append additional Log lines to Summary File
         run: |
