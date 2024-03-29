@@ -229,7 +229,7 @@ $allSummaries_Log += $allSummaries_Log_Import + "`r`n"
 # Set the absolute path for the summary file
 $scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
-# Write the combined summaries to the summary file in the repository root
+# Write the combined summaries to the summary file in the workspace directory
 $summaryFilePath = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $summary_file_name
 $allSummaries_Log | Out-File -FilePath $summaryFilePath -Append -Encoding UTF8
 
