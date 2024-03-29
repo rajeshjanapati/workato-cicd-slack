@@ -230,9 +230,17 @@ $allSummaries_Log += $allSummaries_Log_Import + "`r`n"
 $summaryFilePath = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $summary_file_name
 
 try {
-    # Attempt to create the summary file if it doesn't exist
+    # Check if the summary file already exists
     if (!(Test-Path -Path $summaryFilePath)) {
+        # If the file doesn't exist, create it with write permission
         New-Item -Path $summaryFilePath -ItemType File -Force
+    }
+    else {
+        # If the file exists, ensure that it has write permission
+        $acl = Get-Acl -Path $summaryFilePath
+        $accessRule = New-Object System.Security.AccessControl.FileSystemAccessRule("Everyone", "Write", "Allow")
+        $acl.SetAccessRule($accessRule)
+        Set-Acl -Path $summaryFilePath -AclObject $acl
     }
 
     # Write the combined summaries to the summary file
@@ -244,7 +252,6 @@ catch {
     Write-Host "Error writing to summary file: $_"
     exit 1
 }
-
 
 
 # Delete the summary file from the artifacts
