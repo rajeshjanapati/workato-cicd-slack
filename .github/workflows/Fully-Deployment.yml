@@ -86,7 +86,7 @@ jobs:
       - name: Fully-Deployment CICD
         shell: pwsh
         run: |
-          $output = ./scripts/fullyDeployment.ps1 -accessToken "${{ secrets.WORKATOTOKEN }}" -prodToken "${{ secrets.PRODACCESSTOKEN }}" -manifestName ${{env.manifest_name}} -folderId ${{env.folder_Id}} -action ${{env.ACTION_TYPE}} -manifestId ${{env.manifest_id}} -summary_file_name $env:summary_file_name
+          $output = ./scripts/fullyDeployment.ps1 -accessToken "${{ secrets.WORKATOTOKEN }}" -prodToken "${{ secrets.PRODACCESSTOKEN }}" -manifestName ${{env.manifest_name}} -folderId ${{env.folder_Id}} -action ${{env.ACTION_TYPE}} -manifestId ${{env.manifest_id}} -summary_file_name $env:summary_file_name --url ${{ secrets.TEAMS_WEBHOOK_URL }}
           Write-Output $output
 
       - name: Append Summary to File
