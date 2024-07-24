@@ -6,7 +6,8 @@ Param (
     [Parameter(mandatory = $true)][string]$prodToken, # To receive Workato token
     [Parameter(mandatory = $true)][string]$manifestName, # To receive manifest name
     [Parameter(mandatory = $true)][string]$action, # To receive type of action script shall perform
-    [Parameter(mandatory = $true)][string]$folderId # To receive folder ID
+    [Parameter(mandatory = $true)][string]$folderId, # To receive folder ID
+    [Parameter(mandatory = $true)][string]$url
 )
 
 $CurrentBranch = git rev-parse --abbrev-ref HEAD
