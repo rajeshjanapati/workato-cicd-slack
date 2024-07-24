@@ -10,6 +10,8 @@ Param (
     [Parameter(mandatory = $true)][string]$url
 )
 
+Write-Host "URL IS: $url"
+
 $CurrentBranch = git rev-parse --abbrev-ref HEAD
 Write-Host "Current branch is: $CurrentBranch"
 
