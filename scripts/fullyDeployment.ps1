@@ -37,7 +37,7 @@ $manifestNameCountIn_Success = 0
 $manifestNameCountIn_Failed = 0
 
 # Initial API request to get the ID
-$idPath = "https://www.workato.com/api/packages/export/$manifestId"
+$idPath = "https://app.trial.workato.com/api/packages/export/$manifestId"
 
 try {
     $idResponse = Invoke-RestMethod -Uri $idPath -Method 'POST' -Headers $headers -ContentType "application/json" -ErrorAction Stop -TimeoutSec 60
@@ -53,7 +53,7 @@ try {
         # Make subsequent API requests until download_url is not null
         $downloadURL = $null
         do {
-            $downloadURLpath = "https://www.workato.com/api/packages/$idValue"
+            $downloadURLpath = "https://app.trial.workato.com/api/packages/$idValue"
             Write-Host "downloadURLpath: $downloadURLpath"
 
             $downloadURLresponse = Invoke-RestMethod $downloadURLpath -Method 'GET' -Headers $headers
@@ -150,7 +150,7 @@ if ($action -eq "Create") {
 
     # Upload the ZIP file content to Workato
     Write-Host "Uploading ZIP file content to $uri..."
-    $uri = "https://www.workato.com/api/packages/import/"+$folderId+"?restart_recipes=true"
+    $uri = "https://app.eu.workato.com/api/packages/import/"+$folderId+"?restart_recipes=true"
     Write-Host "API:$uri"
 
     try {
@@ -191,7 +191,7 @@ elseif ($action -eq "ImportAll") {
     $manifestName_Success += $baseNameWithoutExtension
 
     # Upload the ZIP file content to Workato
-    $uri = "https://www.workato.com/api/packages/import/"+$folderId+"?restart_recipes=true"
+    $uri = "https://app.eu.workato.com/api/packages/import/"+$folderId+"?restart_recipes=true"
     Write-Host "API:$uri"
 
     try {
