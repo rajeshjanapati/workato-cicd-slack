@@ -102,7 +102,7 @@ jobs:
           echo "Triggered by: ${{ github.actor }}" >> "$SUMMARY_FILE"
 
       - name: Upload Summary Log File in to Git
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: summary
           path: ${{ env.summary_file_name }}
