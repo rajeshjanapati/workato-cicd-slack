@@ -22,6 +22,14 @@ on:
         type: string
         required: true
         description: Recipe folder Id to Import
+      Source_ENV_Token:
+        type: string
+        required: true
+        description: Provide the API Token of Source Environment
+      Target_ENV_Token:
+        type: string
+        required: true
+        description: Provide the API Token of Destination Environment
       manifest_Name:
         type: string
         required: false
@@ -30,7 +38,9 @@ on:
 env:
   DEPLOYMENT_NAME: Fully-Deployment CICD
   manifest_id: ${{ github.event.client_payload.manifest_Id }}
-  Workato_Token: ${{ secrets.WORKATOTOKEN }}
+  Source_ENV_Token: ${{ github.event.client_payload.Source_ENV_Token }}
+  Target_ENV_Token: ${{ github.event.client_payload.Target_ENV_Token }}
+  # Workato_Token: ${{ secrets.WORKATOTOKEN }}
   GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
   TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
   ACTION_TYPE: ${{ github.event.client_payload.action-type }}
@@ -86,7 +96,7 @@ jobs:
       - name: Fully-Deployment CICD
         shell: pwsh
         run: |
-          $output = ./scripts/fullyDeployment.ps1 -accessToken "${{ secrets.WORKATOTOKEN }}" -prodToken "${{ secrets.PRODACCESSTOKEN }}" -manifestName ${{env.manifest_name}} -folderId ${{env.folder_Id}} -action ${{env.ACTION_TYPE}} -manifestId ${{env.manifest_id}} -summary_file_name $env:summary_file_name -url ${{ secrets.TEAMS_WEBHOOK_URL }}
+          $output = ./scripts/fullyDeployment.ps1 -accessToken "${{ env.Source_ENV_Token }}" -prodToken "${{ env.Target_ENV_Token }}" -manifestName ${{env.manifest_name}} -folderId ${{env.folder_Id}} -action ${{env.ACTION_TYPE}} -manifestId ${{env.manifest_id}} -summary_file_name $env:summary_file_name -url ${{ secrets.TEAMS_WEBHOOK_URL }}
           Write-Output $output
 
       - name: Append Summary to File
